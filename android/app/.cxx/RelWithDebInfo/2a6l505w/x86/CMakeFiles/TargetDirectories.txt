@@ -1,0 +1,2 @@
+D:/flutter_projects/evently_app/android/app/.cxx/RelWithDebInfo/2a6l505w/x86/CMakeFiles/edit_cache.dir
+D:/flutter_projects/evently_app/android/app/.cxx/RelWithDebInfo/2a6l505w/x86/CMakeFiles/rebuild_cache.dir
