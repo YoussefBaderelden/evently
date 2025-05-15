@@ -1,0 +1,33 @@
+class ImageAssets {
+  static const String setupLight = 'assets/images/setup_image_light.png';
+  static const String setupDark = 'assets/images/setup_image_dark.png';
+  static const String horizontalLogo = 'assets/images/horisontal_logo.png';
+  static const String verticalLogo = 'assets/images/vertical_logo.png';
+  static const String english = 'assets/images/english.png';
+  static const String arabic = 'assets/images/arabic.png';
+  static const String google = 'assets/images/google.png';
+  static const String location = 'assets/images/Map_Pin.png';
+  static const String home = 'assets/images/Home.png';
+  static const String homeUnActive = 'assets/images/Home_un_active.png';
+  static const String map = 'assets/images/Map.png';
+  static const String mapUnActive = 'assets/images/Map_un_active.png';
+  static const String profile = 'assets/images/profile.png';
+  static const String profileUnActive = 'assets/images/profile_unactive.png';
+  static const String love = 'assets/images/Heart.png';
+  static const String loveUnActive = 'assets/images/Heart_unactive.png';
+  static const String ALL = 'assets/images/all.png';
+  static const String bike = 'assets/images/bike.png';
+  static const String cake = 'assets/images/cake.png';
+  static const String eating = 'assets/images/eating.png';
+  static const String exhaping = 'assets/images/exhapting.png';
+  static const String gaming = 'assets/images/gaming.png';
+  static const String holiday = 'assets/images/holiday.png';
+  static const String meating = 'assets/images/meating.png';
+  static const String sport = 'assets/images/sport_image.png';
+  static const String workShop = 'assets/images/workShop.png';
+  static const String book = 'assets/images/bookClub.png';
+  static const String birthday = 'assets/images/birthday_image.png';
+  static const String favourt = 'assets/images/favourt.png';
+  static const String favourtUnActive = 'assets/images/favourt_unactive.png';
+  static const String location_selected = 'assets/images/locatioin_selection.png';
+}

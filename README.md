@@ -1,4 +1,4 @@
-# evently_app
+# event_planning_app
 
 A new Flutter project.
 
