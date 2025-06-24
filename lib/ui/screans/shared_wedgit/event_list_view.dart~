@@ -1,0 +1,118 @@
+import 'package:event_planning_app/core/providers/theme_provider.dart';
+import 'package:flutter/material.dart';
+
+import '../../../core/App_assets/image_assets.dart';
+import '../../../core/themes/app_colors.dart';
+
+class EventListView extends StatelessWidget {
+  EventListView({super.key,
+    this.tabController,
+    required this.length,
+    required this.themeProvider, required this.Images, required this.Titels, required this.scrollDirection});
+
+  TabController ? tabController;
+  final Axis scrollDirection;
+  final int length;
+  final ThemeProvider themeProvider;
+  final List<String> Images;
+
+  final List<String> Titels;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        child: TabBarView(controller: tabController, children: [
+          ListView.builder(
+            scrollDirection:scrollDirection,
+            itemCount: length,
+            itemBuilder: (context, index) {
+              return Stack(
+                alignment: AlignmentDirectional.bottomStart,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Container(
+                        width: double.infinity,
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height * 0.25,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: themeProvider.isDark()
+                              ? AppColors.bgDarkDarkPurple
+                              : AppColors.black,
+                          border: Border.all(color: AppColors.primaryPurple),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(Titels[index],
+                                style: TextStyle(
+                                  fontSize: 48,
+                                  fontWeight: FontWeight.bold,
+                                  color: themeProvider.isDark()
+                                      ? AppColors.ofWhite
+                                      : AppColors.bgwhite,
+                                )),
+                            Image.asset(
+                              Images[index],
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width * 0.4,
+                              fit: BoxFit.cover,
+                            ),
+                          ],
+                        )),
+                  ),
+                  Container(
+                    height: MediaQuery
+                        .of(context)
+                        .size
+                        .height * 0.06,
+                    width: double.infinity,
+                    margin: const EdgeInsets.all(26),
+                    decoration: BoxDecoration(
+                        color: themeProvider.isDark()
+                            ? AppColors.bgDarkDarkPurple
+                            : AppColors.bgwhite,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'This is a Birthday Party ',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: themeProvider.isDark()
+                                    ? AppColors.bgwhite
+                                    : AppColors.black),
+                          ),
+                          const Spacer(),
+                          index == 0
+                              ? const ImageIcon(
+                            AssetImage(ImageAssets.favourt),
+                            color: AppColors.primaryPurple,
+                          )
+                              : const ImageIcon(
+                            AssetImage(ImageAssets.favourtUnActive),
+                            color: AppColors.primaryPurple,
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              );
+            },
+          ),
+          Center(child: Text('Sport Events')),
+          Center(child: Text('Birthday Events')),
+          Center(child: Text('Workshop Events')),
+        ]));
+  }
+}
