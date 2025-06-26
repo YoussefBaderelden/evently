@@ -1,11 +1,13 @@
 import 'package:event_planning_app/core/App_assets/image_assets.dart';
 import 'package:event_planning_app/core/models/userDM.dart';
 import 'package:event_planning_app/ui/screans/login_screan/login_screan.dart';
+import 'package:event_planning_app/utiles/provider_extintion.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../../../core/providers/app_local_provider.dart';
+import '../../../core/providers/app_provider.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../../../core/themes/app_colors.dart';
 
@@ -18,6 +20,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   late ThemeProvider themeProvider;
+  late AppProvider appProvider;
 
   late AppLocaleProvider appLocaleProvider;
 
@@ -29,6 +32,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    appProvider = context.appProvider;
     themeProvider = Provider.of<ThemeProvider>(context);
     appLocaleProvider = Provider.of<AppLocaleProvider>(context);
     appLocalizations = AppLocalizations.of(context)!;
@@ -254,7 +258,7 @@ class _ProfileState extends State<Profile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
                Text(
-            Userdm.currentUser.name,
+                 appProvider.curentUser.name,
                 style:const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
@@ -264,7 +268,7 @@ class _ProfileState extends State<Profile> {
                 height: MediaQuery.of(context).size.height * 0.01,
               ),
                Text(
-                Userdm.currentUser.email,
+                appProvider.curentUser.email,
                 style:const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 22,

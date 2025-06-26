@@ -12,11 +12,16 @@ Future<Userdm> getUserfromFirestore(String uid) async {
   CollectionReference user = FirebaseFirestore.instance.collection('users');
   var doc = user.doc(uid);
   DocumentSnapshot snapshot = await doc.get();
+
+  if (!snapshot.exists || snapshot.data() == null) {
+    throw Exception('User with uid $uid not found in Firestore');
+  }
+
   Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
   Userdm userDM = Userdm.fromJson(json: data);
-  Userdm.currentUser = userDM;
   return userDM;
 }
+
 
 //todo:for events
 Future<void> addEvent(EventDM event) async {
@@ -24,34 +29,54 @@ Future<void> addEvent(EventDM event) async {
   Event.add(event.toJson());
 }
 
-Future<List<EventDM>> getEventsByCategory(String category) async {
+Stream<List<EventDM>> getEventsByCategory(String category)  {
   if (category == 'All') {
     CollectionReference Events =
         FirebaseFirestore.instance.collection('Events');
-    QuerySnapshot querySnapshot = await Events.get();
-    List<QueryDocumentSnapshot<Object?>> documentsList = querySnapshot.docs;
+   Stream <QuerySnapshot> querySnapshot =  Events.snapshots();
+    Stream <List<EventDM>> eventStream = querySnapshot.map((querySnapshot){
+      List<QueryDocumentSnapshot<Object?>> documentsList = querySnapshot.docs;
+      List<EventDM> events = documentsList
+          .map(ToEventList)
+          .toList();
+      return events;
+    });
+    return eventStream;
 
-    List<EventDM> events = documentsList
-        .map((e) => EventDM.fromJson(e.data() as Map<String, dynamic>,id: e.id))
-        .toList();
-    return events;
   } else {
     CollectionReference Events =
         FirebaseFirestore.instance.collection('Events');
-    QuerySnapshot querySnapshot =
-        await Events.where('category', isEqualTo: category).get();
-    List<QueryDocumentSnapshot<Object?>> documentsList = querySnapshot.docs;
+    Stream <QuerySnapshot> querySnapshot =
+         Events.where('category', isEqualTo: category).snapshots();
 
-    List<EventDM> events = documentsList
-        .map((e) => EventDM.fromJson(e.data() as Map<String, dynamic>,id: e.id))
-        .toList();
-    return events;
+   Stream <List<EventDM>> eventStream = querySnapshot.map((querySnapshot){
+      List<QueryDocumentSnapshot<Object?>> documentsList = querySnapshot.docs;
+      List<EventDM> events = documentsList
+          .map(ToEventList)
+          .toList();
+      return events;
+    });
+    return eventStream;
   }
 }
+Future <List<EventDM>> getFavEvents(Userdm user) async {
+List<String>favEvents = user.addEventToFav;
+CollectionReference Events =
+        FirebaseFirestore.instance.collection('Events');
+if(favEvents.isEmpty){
+  return [];
+}
+QuerySnapshot querySnapshot =
+        await Events.where(FieldPath.documentId, whereIn: favEvents).get();
+  var Favevents =   querySnapshot.docs;
+return Favevents.map(ToEventList).toList();
+}
 
-Future<void> deleteEventFromFav(String eventId) async {
+EventDM ToEventList(e) => EventDM.fromJson(e.data() as Map<String, dynamic>,id: e.id);
+
+Future<void> deleteEventFromFav(String eventId , String uid) async {
   var user = FirebaseFirestore.instance.collection('users');
-  var userDoc= user.doc(Userdm.currentUser.uid);
+  var userDoc= user.doc(uid);
   userDoc.update({
     "addEventToFav":FieldValue.arrayRemove([eventId])
   });
@@ -59,9 +84,9 @@ Future<void> deleteEventFromFav(String eventId) async {
 
 Future<void> updateEvent() async {}
 
-Future<void> addEventToFav( String eventId ) async {
+Future<void> addEventToFav( String eventId , String uid) async {
   var user = FirebaseFirestore.instance.collection('users');
-  var userDoc= user.doc(Userdm.currentUser.uid);
+  var userDoc= user.doc(uid);
   userDoc.update({
     "addEventToFav":FieldValue.arrayUnion([eventId])
   });

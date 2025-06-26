@@ -4,13 +4,14 @@ import 'package:event_planning_app/core/models/categoryDm.dart';
 import 'package:event_planning_app/core/providers/theme_provider.dart';
 import 'package:event_planning_app/core/themes/app_colors.dart';
 import 'package:event_planning_app/ui/screans/shared_wedgit/TabBarWidget.dart';
+import 'package:event_planning_app/utiles/provider_extintion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../core/models/eventDM.dart';
-import '../../../core/models/userDM.dart';
 import '../../../core/providers/app_local_provider.dart';
+import '../../../core/providers/app_provider.dart';
 import '../eventScrean/create_event_screan.dart';
 
 class HomeScrean extends StatefulWidget {
@@ -25,6 +26,7 @@ class HomeScrean extends StatefulWidget {
 class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
   late ThemeProvider themeProvider;
   late AppLocaleProvider appLocaleProvider;
+  late AppProvider appProvider;
   late AppLocalizations appLocalizations;
   late TabController tabController;
   Categorydm selectedCategory = Categorydm.categorieswithAll[0];
@@ -36,7 +38,7 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
 
     // تحميل بيانات المستخدم من Firestore وتحديث الواجهة
     Future.delayed(Duration.zero, () async {
-      await getUserfromFirestore(Userdm.currentUser.uid);
+      await getUserfromFirestore(appProvider.curentUser.uid);
       setState(() {});
     });
   }
@@ -49,6 +51,7 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    appProvider = context.appProvider;
     themeProvider = Provider.of<ThemeProvider>(context);
     appLocaleProvider = Provider.of<AppLocaleProvider>(context);
     appLocalizations = AppLocalizations.of(context)!;
@@ -57,7 +60,7 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
         children: [
           Container(
             padding:
-            const EdgeInsets.only(top: 40, left: 16, right: 16, bottom: 16),
+                const EdgeInsets.only(top: 40, left: 16, right: 16, bottom: 16),
             height: MediaQuery.of(context).size.height * 0.25,
             decoration: BoxDecoration(
               color: themeProvider.isDark()
@@ -81,7 +84,7 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
                               fontWeight: FontWeight.w400,
                               color: AppColors.bgwhite,
                             )),
-                        Text(Userdm.currentUser.name,
+                        Text(appProvider.curentUser.name,
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.w700,
@@ -121,18 +124,18 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.circular(12)),
                         child: appLocaleProvider.AppLocal == 'en'
                             ? const Text(
-                          'AR',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.primaryPurple),
-                        )
+                                'AR',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: AppColors.primaryPurple),
+                              )
                             : const Text('EN',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.primaryPurple,
-                            )),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.primaryPurple,
+                                )),
                       ),
                     ),
                   ],
@@ -158,8 +161,8 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
               ],
             ),
           ),
-          FutureBuilder<List<EventDM>>(
-            future: getEventsByCategory(selectedCategory.name),
+          StreamBuilder<List<EventDM>>(
+            stream: getEventsByCategory(selectedCategory.name),
             builder: (context, snapShot) {
               if (snapShot.hasData) {
                 var events = snapShot.data!;
@@ -190,7 +193,7 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
     );
   }
 
-  Expanded buildTabBarView(ThemeProvider themeProvider, List<EventDM> events) {
+  Widget buildTabBarView(ThemeProvider themeProvider, List<EventDM> events) {
     return Expanded(
       child: ListView.builder(
         itemCount: events.length,
@@ -304,19 +307,23 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
   }
 
   Widget buildImageIcon(String eventId) {
-    bool isFav = Userdm.currentUser.isfavouriteevent(eventId);
+    bool isFav = appProvider.curentUser.isfavouriteevent(eventId);
     return InkWell(
-      onTap: (){
-        if(isFav){
-          deleteEventFromFav(eventId);
-        }else{
-          addEventToFav(eventId);
+      onTap: () {
+        if (isFav) {
+          appProvider.removeFromFavouriteEvent(eventId);
+
+        } else {
+          appProvider.addToFavouriteEvent(eventId);
         }
+
       },
-      child: isFav?const ImageIcon(
+      child: isFav
+          ? const ImageIcon(
               AssetImage(ImageAssets.favourt),
               color: AppColors.primaryPurple,
-            ):const ImageIcon(
+            )
+          : const ImageIcon(
               AssetImage(ImageAssets.favourtUnActive),
               color: AppColors.primaryPurple,
             ),

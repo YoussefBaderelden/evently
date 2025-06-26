@@ -1,0 +1,2 @@
+C:/flutter with AS/event_planning_app/android/app/.cxx/Debug/1tm84v4c/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/flutter with AS/event_planning_app/android/app/.cxx/Debug/1tm84v4c/armeabi-v7a/CMakeFiles/rebuild_cache.dir

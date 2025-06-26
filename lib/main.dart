@@ -9,6 +9,7 @@ import 'package:event_planning_app/ui/screans/setup_screan.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'core/providers/app_provider.dart';
 import 'core/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -28,7 +29,10 @@ void main() async {
     ),
     ChangeNotifierProvider(
       create: (context) => AppLocaleProvider(),
-    )
+    ),
+    ChangeNotifierProvider(
+      create: (context) => AppProvider(),
+    ),
   ], child: MyApp()));
 }
 

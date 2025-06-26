@@ -3,11 +3,13 @@ import 'package:event_planning_app/core/App_assets/image_assets.dart';
 import 'package:event_planning_app/core/models/userDM.dart';
 import 'package:event_planning_app/core/themes/app_colors.dart';
 import 'package:event_planning_app/core/firebasehulpers/auth/firebase_auth_methods.dart';
+import 'package:event_planning_app/utiles/provider_extintion.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/firebasehulpers/store/firestore_hulpers.dart';
 import '../../../core/providers/app_local_provider.dart';
+import '../../../core/providers/app_provider.dart';
 import '../../../core/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -28,6 +30,7 @@ class _LoginScreanState extends State<LoginScrean> {
   late ThemeProvider themeProvider;
 
   late AppLocalizations appLocalizations;
+  late AppProvider appProvider;
 
   late AppLocaleProvider appLocaleProvider;
 
@@ -41,6 +44,7 @@ class _LoginScreanState extends State<LoginScrean> {
 
   @override
   Widget build(BuildContext context) {
+    appProvider = context.appProvider;
     themeProvider = Provider.of<ThemeProvider>(context);
     appLocaleProvider = Provider.of<AppLocaleProvider>(context);
     appLocalizations = AppLocalizations.of(context)!;
@@ -183,7 +187,8 @@ class _LoginScreanState extends State<LoginScrean> {
               email: controllerEmail.text,
               password: controllerPassword.text,
             );
-            Userdm.currentUser = await getUserfromFirestore(credential.user!.uid);
+            appProvider
+                .updateUser(await getUserfromFirestore(credential.user!.uid));
             //todo:hide loading
             hideLoading(context);
             //todo:navigate to home // why? because if there is an error it will not get to here if not and sucsses it navigate

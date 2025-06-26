@@ -6,12 +6,14 @@ import 'package:event_planning_app/core/models/categoryDm.dart';
 import 'package:event_planning_app/core/models/eventDM.dart';
 import 'package:event_planning_app/core/models/userDM.dart';
 import 'package:event_planning_app/core/themes/app_colors.dart';
+import 'package:event_planning_app/utiles/provider_extintion.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../../../core/App_assets/image_assets.dart';
 import '../../../core/providers/app_local_provider.dart';
+import '../../../core/providers/app_provider.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../shared_wedgit/TabBarWidget.dart';
 import '../shared_wedgit/app_bar_view.dart';
@@ -30,6 +32,7 @@ class _CreateEventScreanState extends State<CreateEventScrean>
   late ThemeProvider themeProvider;
   late AppLocaleProvider appLocaleProvider;
   late AppLocalizations appLocalizations;
+  late AppProvider appProvider;
   late TabController tabController;
 
   @override
@@ -54,6 +57,7 @@ class _CreateEventScreanState extends State<CreateEventScrean>
 
   @override
   Widget build(BuildContext context) {
+    appProvider = context.appProvider;
     themeProvider = Provider.of<ThemeProvider>(context);
     appLocaleProvider = Provider.of<AppLocaleProvider>(context);
     appLocalizations = AppLocalizations.of(context)!;
@@ -139,7 +143,7 @@ class _CreateEventScreanState extends State<CreateEventScrean>
       child: FilledButton(
           onPressed: () async {
             EventDM event = EventDM(
-              ownerId: Userdm.currentUser!.uid,
+              ownerId: appProvider.curentUser.uid,
               title: titleController.text,
               category: selectedCategory.name,
               description: DescriptionController.text,

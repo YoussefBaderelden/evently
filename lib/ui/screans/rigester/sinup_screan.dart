@@ -3,6 +3,7 @@ import 'package:event_planning_app/core/models/userDM.dart';
 import 'package:event_planning_app/ui/screans/login_screan/login_screan.dart';
 import 'package:event_planning_app/core/firebasehulpers/auth/firebase_auth_methods.dart';
 import 'package:event_planning_app/ui/screans/shared_wedgit/app_bar_view.dart';
+import 'package:event_planning_app/utiles/provider_extintion.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../../../core/App_assets/image_assets.dart';
 import '../../../core/firebasehulpers/store/firestore_hulpers.dart';
 import '../../../core/providers/app_local_provider.dart';
+import '../../../core/providers/app_provider.dart';
 import '../../../core/themes/app_colors.dart';
 import '../bottum_navigation/button_navigation_bar.dart';
 
@@ -25,6 +27,7 @@ class SinupScrean extends StatefulWidget {
 
 class _SinupScreanState extends State<SinupScrean> {
   late AppLocalizations appLocalizations;
+  late AppProvider appProvider;
 
   late AppLocaleProvider appLocaleProvider;
 
@@ -37,6 +40,7 @@ class _SinupScreanState extends State<SinupScrean> {
 
   @override
   Widget build(BuildContext context) {
+    appProvider = context.appProvider;
     void passwordVisability() {
       setState(() {
         obscureTextpassword = !obscureTextpassword;
@@ -52,7 +56,10 @@ class _SinupScreanState extends State<SinupScrean> {
     appLocaleProvider = Provider.of<AppLocaleProvider>(context);
     appLocalizations = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBarView(title: appLocalizations.registar, color: AppColors.black,),
+      appBar: AppBarView(
+        title: appLocalizations.registar,
+        color: AppColors.black,
+      ),
       body: Directionality(
         textDirection: TextDirection.ltr,
         child: SingleChildScrollView(
@@ -129,12 +136,14 @@ class _SinupScreanState extends State<SinupScrean> {
                               email: controllerEmail.text,
                               password: controllerPassword.text,
                             );
-                            Userdm.currentUser = Userdm(
+                            Userdm newUser = Userdm(
                               email: controllerEmail.text,
                               name: controllername.text,
                               uid: credential.user!.uid,
                             );
-                            await addUserToFirestore(Userdm.currentUser);
+                            await addUserToFirestore(newUser);
+                            appProvider.updateUser(
+                                await getUserfromFirestore(newUser.uid));
                             hideLoading(context);
                             Navigator.pushNamed(
                                 context, ButtonNavigationBar.routeName);

@@ -29,7 +29,6 @@ class Userdm {
     };
   }
 
-  static Userdm currentUser = Userdm(uid: '', email: '', name: '', addEventToFav: []);
 
   bool isfavouriteevent(String eventId) {
     return addEventToFav.contains(eventId);
