@@ -2,11 +2,11 @@ import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:event_planning_app/core/App_assets/image_assets.dart';
 import 'package:event_planning_app/core/providers/theme_provider.dart';
 import 'package:event_planning_app/core/themes/app_colors.dart';
-import 'package:event_planning_app/ui/screans/login_screan/login_screan.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../core/providers/app_local_provider.dart';
+import 'onboarding_screan/onboarding_screan.dart';
 
 class SetupScrean extends StatelessWidget {
   SetupScrean({super.key});
@@ -60,7 +60,7 @@ class SetupScrean extends StatelessWidget {
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                     AnimatedToggleSwitch.rolling(
-                      style: ToggleStyle(
+                      style: const ToggleStyle(
                         backgroundColor: Colors.transparent,
                         indicatorColor: AppColors.primaryPurple,
                         borderColor: AppColors.primaryPurple,
@@ -69,14 +69,14 @@ class SetupScrean extends StatelessWidget {
                         appLocaleProvider.AppLocal = value;
                       },
                       current: appLocaleProvider.AppLocal,
-                      values: ['ar', 'en'],
+                      values:const ['ar', 'en'],
                       iconBuilder: (value, foreground) {
                         if (value == 'en') {
-                          return CircleAvatar(
+                          return const CircleAvatar(
                             backgroundImage: AssetImage(ImageAssets.arabic),
                           );
                         } else {
-                          return CircleAvatar(
+                          return const CircleAvatar(
                             backgroundImage: AssetImage(ImageAssets.english),
                           );
                         }
@@ -95,7 +95,7 @@ class SetupScrean extends StatelessWidget {
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                     AnimatedToggleSwitch.rolling(
-                      style: ToggleStyle(
+                      style: const ToggleStyle(
                         backgroundColor: Colors.transparent,
                         indicatorColor: AppColors.primaryPurple,
                         borderColor: AppColors.primaryPurple,
@@ -104,7 +104,7 @@ class SetupScrean extends StatelessWidget {
                         themeProvider.setThemeMode = value;
                       },
                       current: themeProvider.getThemeMode,
-                      values: [ThemeMode.dark, ThemeMode.light],
+                      values: const [ThemeMode.dark, ThemeMode.light],
                       iconBuilder: (value, foreground) {
                         if (value == ThemeMode.dark) {
                           return Icon(Icons.nightlight,
@@ -132,7 +132,7 @@ class SetupScrean extends StatelessWidget {
                   child: FilledButton(
                       onPressed: () {
                         Navigator.pushReplacementNamed(
-                            context, LoginScrean.routName);
+                            context, OnboardingScrean.routeName);
                       },
                       child: Text(appLocalizations.setupClick)),
                 ),

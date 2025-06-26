@@ -31,4 +31,11 @@ class ImageAssets {
   static const String favourtUnActive = 'assets/images/favourt_unactive.png';
   static const String location_selected = 'assets/images/locatioin_selection.png';
   static const String profilepic = 'assets/images/profilepic.png';
+  static const String on1 = 'assets/images/onb1light.png';
+  static const String on2light = 'assets/images/on2light.png';
+  static const String on2dark = 'assets/images/on2dark.png';
+  static const String on3light = 'assets/images/on3light.png';
+  static const String on3dark = 'assets/images/on3dark.png';
+  static const String next = 'assets/images/next.png';
+  static const String back = 'assets/images/back.png';
 }

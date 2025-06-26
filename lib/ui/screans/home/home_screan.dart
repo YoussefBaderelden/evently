@@ -36,11 +36,6 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
     super.initState();
     tabController = TabController(length: 9, vsync: this);
 
-    // تحميل بيانات المستخدم من Firestore وتحديث الواجهة
-    Future.delayed(Duration.zero, () async {
-      await getUserfromFirestore(appProvider.curentUser.uid);
-      setState(() {});
-    });
   }
 
   @override

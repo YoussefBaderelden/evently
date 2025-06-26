@@ -4,8 +4,10 @@ import 'package:event_planning_app/ui/screans/bottum_navigation/button_navigatio
 import 'package:event_planning_app/ui/screans/eventScrean/create_event_screan.dart';
 import 'package:event_planning_app/ui/screans/home/home_screan.dart';
 import 'package:event_planning_app/ui/screans/login_screan/login_screan.dart';
+import 'package:event_planning_app/ui/screans/onboarding_screan/onboarding_screan.dart';
 import 'package:event_planning_app/ui/screans/rigester/sinup_screan.dart';
 import 'package:event_planning_app/ui/screans/setup_screan.dart';
+import 'package:event_planning_app/ui/screans/splash_screan/splash_screan.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -55,14 +57,16 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.dark,
       debugShowCheckedModeBanner: false,
       routes: {
+        SplashScrean.routeName: (_) => const SplashScrean(),
         SetupScrean.routName: (_) => SetupScrean(),
+        OnboardingScrean.routeName: (_) => OnboardingScrean(),
         LoginScrean.routName: (_) => LoginScrean(),
         SinupScrean.routName: (_) => SinupScrean(),
         HomeScrean.routeName: (_) => HomeScrean(),
         ButtonNavigationBar.routeName: (_) => const ButtonNavigationBar(),
         CreateEventScrean.routeName: (_) => CreateEventScrean(),
       },
-      initialRoute: LoginScrean.routName,
+      initialRoute: SplashScrean.routeName,
     );
   }
 }
