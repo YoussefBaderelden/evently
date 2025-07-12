@@ -258,7 +258,7 @@ class _ProfileState extends State<Profile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
                Text(
-                 appProvider.curentUser.name,
+                 appProvider.curentUser!.name,
                 style:const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
@@ -268,7 +268,7 @@ class _ProfileState extends State<Profile> {
                 height: MediaQuery.of(context).size.height * 0.01,
               ),
                Text(
-                appProvider.curentUser.email,
+                appProvider.curentUser!.email,
                 style:const TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 22,

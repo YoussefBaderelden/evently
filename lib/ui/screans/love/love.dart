@@ -37,7 +37,7 @@ class _LoveState extends State<Love> {
         child: Column(
           children: [
             FutureBuilder<List<EventDM>>(
-              future: getFavEvents(appProvider.curentUser),
+              future: getFavEvents(appProvider.curentUser!),
               builder: (context, snapShot) {
                 if (snapShot.hasData) {
                   var events = snapShot.data!;
@@ -181,7 +181,7 @@ class _LoveState extends State<Love> {
 }
 
 Widget buildImageIcon(String eventId, AppProvider appProvider) {
-  bool isFav = appProvider.curentUser.isfavouriteevent(eventId);
+  bool isFav = appProvider.curentUser!.isfavouriteevent(eventId);
   return InkWell(
     onTap: () {
       if (isFav) {

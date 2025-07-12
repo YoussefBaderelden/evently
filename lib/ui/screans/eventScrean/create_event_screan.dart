@@ -151,7 +151,7 @@ class _CreateEventScreanState extends State<CreateEventScrean>
       child: FilledButton(
           onPressed: () async {
             EventDM event = EventDM(
-                ownerId: appProvider.curentUser.uid,
+                ownerId: appProvider.curentUser!.uid,
                 title: titleController.text,
                 category: selectedCategory.name,
                 description: DescriptionController.text,

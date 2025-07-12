@@ -18,7 +18,6 @@ import '../eventScrean/event_ditels.dart';
 
 class HomeScrean extends StatefulWidget {
   HomeScrean({super.key});
-
   static const routeName = '/home';
 
   @override
@@ -51,22 +50,27 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
     themeProvider = Provider.of<ThemeProvider>(context);
     appLocaleProvider = Provider.of<AppLocaleProvider>(context);
     appLocalizations = AppLocalizations.of(context)!;
+
+    if (appProvider.curentUser == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Directionality(
       textDirection: ui.TextDirection.ltr,
       child: Scaffold(
         body: Column(
           children: [
             Container(
-              padding:
-                  const EdgeInsets.only(top: 40, left: 16, right: 16, bottom: 16),
+              padding: const EdgeInsets.only(top: 40, left: 16, right: 16, bottom: 16),
               height: MediaQuery.of(context).size.height * 0.25,
               decoration: BoxDecoration(
                 color: themeProvider.isDark()
                     ? AppColors.bgDarkDarkPurple
                     : AppColors.primaryPurple,
                 borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(24),
-                    bottomRight: Radius.circular(24)),
+                    bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24)),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -82,7 +86,7 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.bgwhite,
                               )),
-                          Text(appProvider.curentUser.name,
+                          Text(appProvider.curentUser!.name,
                               style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w700,
@@ -106,11 +110,8 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
                           )),
                       InkWell(
                         onTap: () {
-                          if (appLocaleProvider.AppLocal == 'en') {
-                            appLocaleProvider.AppLocal = 'ar';
-                          } else {
-                            appLocaleProvider.AppLocal = 'en';
-                          }
+                          appLocaleProvider.AppLocal =
+                          appLocaleProvider.AppLocal == 'en' ? 'ar' : 'en';
                           setState(() {});
                         },
                         child: Container(
@@ -120,20 +121,13 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
                           decoration: BoxDecoration(
                               color: AppColors.ofWhite,
                               borderRadius: BorderRadius.circular(12)),
-                          child: appLocaleProvider.AppLocal == 'en'
-                              ? const Text(
-                                  'AR',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: AppColors.primaryPurple),
-                                )
-                              : const Text('EN',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: AppColors.primaryPurple,
-                                  )),
+                          child: Text(
+                            appLocaleProvider.AppLocal == 'en' ? 'AR' : 'EN',
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.primaryPurple),
+                          ),
                         ),
                       ),
                     ],
@@ -318,7 +312,7 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
   }
 
   Widget buildImageIcon(String eventId) {
-    bool isFav = appProvider.curentUser.isfavouriteevent(eventId);
+    bool isFav = appProvider.curentUser?.isfavouriteevent(eventId) ?? false;
     return InkWell(
       onTap: () {
         if (isFav) {
@@ -329,13 +323,13 @@ class _HomeScreanState extends State<HomeScrean> with TickerProviderStateMixin {
       },
       child: isFav
           ? const ImageIcon(
-              AssetImage(ImageAssets.favourt),
-              color: AppColors.primaryPurple,
-            )
+        AssetImage(ImageAssets.favourt),
+        color: AppColors.primaryPurple,
+      )
           : const ImageIcon(
-              AssetImage(ImageAssets.favourtUnActive),
-              color: AppColors.primaryPurple,
-            ),
+        AssetImage(ImageAssets.favourtUnActive),
+        color: AppColors.primaryPurple,
+      ),
     );
   }
 

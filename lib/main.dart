@@ -13,6 +13,7 @@ import 'package:event_planning_app/ui/screans/splash_screan/splash_screan.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'core/firebasehulpers/auth/login_state.dart';
 import 'core/providers/app_provider.dart';
 import 'core/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -74,7 +75,7 @@ class MyApp extends StatelessWidget {
         ButtonNavigationBar.routeName: (_) => const ButtonNavigationBar(),
         CreateEventScrean.routeName: (_) => CreateEventScrean(),
       },
-      initialRoute: LoginScrean.routName ,
+      home: const AuthWrapper(),
     );
   }
 }

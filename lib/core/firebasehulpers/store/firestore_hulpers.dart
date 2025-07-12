@@ -104,3 +104,4 @@ Future<void> addEventToFav(String eventId, String uid) async {
     "addEventToFav": FieldValue.arrayUnion([eventId])
   });
 }
+

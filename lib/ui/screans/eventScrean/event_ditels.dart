@@ -66,7 +66,7 @@ class _EventDitelsState extends State<EventDitels> {
           actions: [
             IconButton(
                 onPressed: () {
-                  if (appProvider.curentUser.uid == widget.event.ownerId) {
+                  if (appProvider.curentUser!.uid == widget.event.ownerId) {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -112,7 +112,7 @@ class _EventDitelsState extends State<EventDitels> {
                 )),
             IconButton(
                 onPressed: () async {
-                  if (appProvider.curentUser.uid == widget.event.ownerId) {
+                  if (appProvider.curentUser!.uid == widget.event.ownerId) {
                     await deleteEvent(widget.event.id);
                     Navigator.pop(context);
                   } else {
