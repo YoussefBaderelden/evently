@@ -36,7 +36,6 @@ class _LoveState extends State<Love> {
       body: SafeArea(
         child: Column(
           children: [
-            buildSearchTextField(),
             FutureBuilder<List<EventDM>>(
               future: getFavEvents(appProvider.curentUser),
               builder: (context, snapShot) {
@@ -176,22 +175,6 @@ class _LoveState extends State<Love> {
             ],
           );
         },
-      ),
-    );
-  }
-
-  Padding buildSearchTextField() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: appLocalizations.search_for_event,
-          prefixIcon: const Icon(
-            Icons.search,
-          ),
-        ),
       ),
     );
   }

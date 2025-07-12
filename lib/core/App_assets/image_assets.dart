@@ -38,4 +38,5 @@ class ImageAssets {
   static const String on3dark = 'assets/images/on3dark.png';
   static const String next = 'assets/images/next.png';
   static const String back = 'assets/images/back.png';
+  static const String scadual = 'assets/images/scadual.png';
 }

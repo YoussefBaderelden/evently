@@ -1,4 +1,6 @@
 import 'package:event_planning_app/core/providers/app_local_provider.dart';
+import 'package:event_planning_app/core/providers/event_map_screan_provider.dart';
+import 'package:event_planning_app/core/providers/map_screan_provider.dart';
 import 'package:event_planning_app/core/themes/app_theme.dart';
 import 'package:event_planning_app/ui/screans/bottum_navigation/button_navigation_bar.dart';
 import 'package:event_planning_app/ui/screans/eventScrean/create_event_screan.dart';
@@ -28,6 +30,12 @@ void main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => EventMapScreanProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => MapScreanProvider(),
     ),
     ChangeNotifierProvider(
       create: (context) => AppLocaleProvider(),
@@ -66,7 +74,7 @@ class MyApp extends StatelessWidget {
         ButtonNavigationBar.routeName: (_) => const ButtonNavigationBar(),
         CreateEventScrean.routeName: (_) => CreateEventScrean(),
       },
-      initialRoute: SplashScrean.routeName,
+      initialRoute: LoginScrean.routName ,
     );
   }
 }

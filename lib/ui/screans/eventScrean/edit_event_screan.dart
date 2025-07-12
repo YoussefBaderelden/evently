@@ -1,44 +1,55 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:event_planning_app/core/firebasehulpers/auth/firebase_auth_methods.dart';
-import 'package:event_planning_app/core/firebasehulpers/store/firestore_hulpers.dart';
-import 'package:event_planning_app/core/models/categoryDm.dart';
-import 'package:event_planning_app/core/models/eventDM.dart';
-import 'package:event_planning_app/core/themes/app_colors.dart';
 import 'package:event_planning_app/utiles/provider_extintion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../../../core/App_assets/image_assets.dart';
+import '../../../core/firebasehulpers/auth/firebase_auth_methods.dart';
+import '../../../core/firebasehulpers/store/firestore_hulpers.dart';
+import '../../../core/models/categoryDm.dart';
+import '../../../core/models/eventDM.dart';
 import '../../../core/providers/app_local_provider.dart';
 import '../../../core/providers/app_provider.dart';
 import '../../../core/providers/event_map_screan_provider.dart';
 import '../../../core/providers/theme_provider.dart';
+import '../../../core/themes/app_colors.dart';
+import '../home/home_screan.dart';
 import '../shared_wedgit/TabBarWidget.dart';
 import '../shared_wedgit/app_bar_view.dart';
 import 'map_event_screan.dart';
 
-class CreateEventScrean extends StatefulWidget {
-  CreateEventScrean({super.key});
+class EditEventScrean extends StatefulWidget {
+  final EventDM currentEvent;
 
-  static const String routeName = '/createEvent';
+  const EditEventScrean({
+    super.key,
+    required this.currentEvent,
+  });
 
   @override
-  State<CreateEventScrean> createState() => _CreateEventScreanState();
+  State<EditEventScrean> createState() => _EditEventScreanState();
 }
 
-class _CreateEventScreanState extends State<CreateEventScrean>
+class _EditEventScreanState extends State<EditEventScrean>
     with TickerProviderStateMixin {
   late ThemeProvider themeProvider;
   late AppLocaleProvider appLocaleProvider;
   late AppLocalizations appLocalizations;
   late AppProvider appProvider;
   late TabController tabController;
+  late Categorydm selectedCategory;
   late EventMapScreanProvider eventMapScreanProvider;
+
+  late DateTime selectedDate;
+  late DateTime time;
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 8, vsync: this);
+    selectedCategory = Categorydm.fromName(widget.currentEvent.category);
+    selectedDate = widget.currentEvent.date;
+    time = widget.currentEvent.time;
   }
 
   @override
@@ -47,12 +58,9 @@ class _CreateEventScreanState extends State<CreateEventScrean>
     super.dispose();
   }
 
-  DateTime selectedDate = DateTime.now();
-  DateTime time = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
   TextEditingController titleController = TextEditingController();
   TextEditingController DescriptionController = TextEditingController();
-  Categorydm selectedCategory = Categorydm.sports;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +74,7 @@ class _CreateEventScreanState extends State<CreateEventScrean>
       textDirection: TextDirection.ltr,
       child: Scaffold(
         appBar: AppBarView(
-          title: appLocalizations.create_event,
+          title: appLocalizations.edit_event,
           color: AppColors.primaryPurple,
         ),
         body: ListView(
@@ -149,22 +157,27 @@ class _CreateEventScreanState extends State<CreateEventScrean>
       height: MediaQuery.of(context).size.height * 0.055,
       width: MediaQuery.of(context).size.width,
       child: FilledButton(
-          onPressed: () async {
-            EventDM event = EventDM(
-                ownerId: appProvider.curentUser.uid,
-                title: titleController.text,
-                category: selectedCategory.name,
-                description: DescriptionController.text,
-                date: selectedDate,
-                time: time,
-                lat: eventMapScreanProvider.currentLatLng?.latitude,
-                long: eventMapScreanProvider.currentLatLng?.longitude);
-            showLoading(context);
-            await addEvent(event);
-            hideLoading(context);
-            Navigator.pop(context);
-          },
-          child: Text(appLocalizations.add_event)),
+        onPressed: () async {
+          EventDM event = EventDM(
+            id: widget.currentEvent.id,
+            // ✅ تمرير ID الأساسي
+            ownerId: widget.currentEvent.ownerId,
+            // ✅ تمرير صاحب الحدث
+            title: titleController.text,
+            category: selectedCategory.name,
+            description: DescriptionController.text,
+            date: selectedDate,
+            time: time,
+            lat: eventMapScreanProvider.currentLatLng?.latitude,
+            long: eventMapScreanProvider.currentLatLng?.longitude,
+          );
+          showLoading(context);
+          await updateEvent(event);
+          hideLoading(context);
+          Navigator.pushNamed(context, HomeScrean.routeName);
+        },
+        child: Text(appLocalizations.update_event),
+      ),
     );
   }
 
@@ -185,7 +198,9 @@ class _CreateEventScreanState extends State<CreateEventScrean>
           Image.asset(ImageAssets.location_selected),
           SizedBox(width: MediaQuery.of(context).size.width * 0.02),
           Text(
-            "${eventMapScreanProvider.currentLatLng?.latitude.round()},${eventMapScreanProvider.currentLatLng?.longitude.round()}",
+            eventMapScreanProvider.currentLatLng?.latitude == null
+                ? appLocalizations.update_event_location
+                : "${eventMapScreanProvider.currentLatLng?.latitude.round()},${eventMapScreanProvider.currentLatLng?.longitude.round()}",
             style: const TextStyle(
                 fontSize: 16,
                 color: AppColors.primaryPurple,
@@ -270,7 +285,7 @@ class _CreateEventScreanState extends State<CreateEventScrean>
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        hintText: appLocalizations.event_description,
+        hintText: widget.currentEvent.description,
         hintStyle: TextStyle(
             color: themeProvider.isDark() ? AppColors.ofWhite : AppColors.gray),
       ),
@@ -287,7 +302,7 @@ class _CreateEventScreanState extends State<CreateEventScrean>
         prefixIcon: const Icon(
           EvaIcons.editOutline,
         ),
-        hintText: appLocalizations.event_title,
+        hintText: widget.currentEvent.title,
         hintStyle: TextStyle(
             color: themeProvider.isDark() ? AppColors.ofWhite : AppColors.gray),
       ),

@@ -22,72 +22,85 @@ Future<Userdm> getUserfromFirestore(String uid) async {
   return userDM;
 }
 
-
 //todo:for events
 Future<void> addEvent(EventDM event) async {
   CollectionReference Event = FirebaseFirestore.instance.collection('Events');
   Event.add(event.toJson());
 }
 
-Stream<List<EventDM>> getEventsByCategory(String category)  {
+Stream<List<EventDM>> getEventsByCategory(String category) {
   if (category == 'All') {
     CollectionReference Events =
         FirebaseFirestore.instance.collection('Events');
-   Stream <QuerySnapshot> querySnapshot =  Events.snapshots();
-    Stream <List<EventDM>> eventStream = querySnapshot.map((querySnapshot){
+    Stream<QuerySnapshot> querySnapshot = Events.snapshots();
+    Stream<List<EventDM>> eventStream = querySnapshot.map((querySnapshot) {
       List<QueryDocumentSnapshot<Object?>> documentsList = querySnapshot.docs;
-      List<EventDM> events = documentsList
-          .map(ToEventList)
-          .toList();
+      List<EventDM> events = documentsList.map(ToEventList).toList();
       return events;
     });
     return eventStream;
-
   } else {
     CollectionReference Events =
         FirebaseFirestore.instance.collection('Events');
-    Stream <QuerySnapshot> querySnapshot =
-         Events.where('category', isEqualTo: category).snapshots();
+    Stream<QuerySnapshot> querySnapshot =
+        Events.where('category', isEqualTo: category).snapshots();
 
-   Stream <List<EventDM>> eventStream = querySnapshot.map((querySnapshot){
+    Stream<List<EventDM>> eventStream = querySnapshot.map((querySnapshot) {
       List<QueryDocumentSnapshot<Object?>> documentsList = querySnapshot.docs;
-      List<EventDM> events = documentsList
-          .map(ToEventList)
-          .toList();
+      List<EventDM> events = documentsList.map(ToEventList).toList();
       return events;
     });
     return eventStream;
   }
 }
-Future <List<EventDM>> getFavEvents(Userdm user) async {
-List<String>favEvents = user.addEventToFav;
-CollectionReference Events =
-        FirebaseFirestore.instance.collection('Events');
-if(favEvents.isEmpty){
-  return [];
-}
-QuerySnapshot querySnapshot =
-        await Events.where(FieldPath.documentId, whereIn: favEvents).get();
-  var Favevents =   querySnapshot.docs;
-return Favevents.map(ToEventList).toList();
+
+Future<List<EventDM>> getFavEvents(Userdm user) async {
+  List<String> favEvents = user.addEventToFav;
+  CollectionReference Events = FirebaseFirestore.instance.collection('Events');
+  if (favEvents.isEmpty) {
+    return [];
+  }
+  QuerySnapshot querySnapshot =
+      await Events.where(FieldPath.documentId, whereIn: favEvents).get();
+  var Favevents = querySnapshot.docs;
+  return Favevents.map(ToEventList).toList();
 }
 
-EventDM ToEventList(e) => EventDM.fromJson(e.data() as Map<String, dynamic>,id: e.id);
+EventDM ToEventList(e) =>
+    EventDM.fromJson(e.data() as Map<String, dynamic>, id: e.id);
 
-Future<void> deleteEventFromFav(String eventId , String uid) async {
+Future<void> deleteEventFromFav(String eventId, String uid) async {
   var user = FirebaseFirestore.instance.collection('users');
-  var userDoc= user.doc(uid);
+  var userDoc = user.doc(uid);
   userDoc.update({
-    "addEventToFav":FieldValue.arrayRemove([eventId])
+    "addEventToFav": FieldValue.arrayRemove([eventId])
   });
 }
 
-Future<void> updateEvent() async {}
+Future<void> deleteEvent(String eventId) async {
+  CollectionReference event = FirebaseFirestore.instance.collection('Events');
+  event.doc(eventId).delete();
+}
 
-Future<void> addEventToFav( String eventId , String uid) async {
+Future<void> updateEvent(EventDM event) async {
+  CollectionReference eventRef =
+  FirebaseFirestore.instance.collection('Events');
+
+  await eventRef.doc(event.id).update({
+    "category": event.category,
+    "title": event.title,
+    "description": event.description,
+    "date": event.date,
+    "time": event.time,
+    "lat": event.lat,
+    "long": event.long
+  });
+}
+
+Future<void> addEventToFav(String eventId, String uid) async {
   var user = FirebaseFirestore.instance.collection('users');
-  var userDoc= user.doc(uid);
+  var userDoc = user.doc(uid);
   userDoc.update({
-    "addEventToFav":FieldValue.arrayUnion([eventId])
+    "addEventToFav": FieldValue.arrayUnion([eventId])
   });
 }

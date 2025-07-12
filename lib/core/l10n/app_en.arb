@@ -51,5 +51,9 @@
   "dark": "Dark",
   "logout": "Logout",
   "choose_language": "Choose Language",
-  "choose_theme": "Choose Theme"
+  "choose_theme": "Choose Theme",
+  "edit_event": "Edit Event",
+  "event_details": "Event Details",
+  "update_event": "Update Event",
+  "update_event_location": "Update Event Location"
 }
