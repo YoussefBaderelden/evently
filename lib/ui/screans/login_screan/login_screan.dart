@@ -1,6 +1,5 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:event_planning_app/core/App_assets/image_assets.dart';
-import 'package:event_planning_app/core/models/userDM.dart';
 import 'package:event_planning_app/core/themes/app_colors.dart';
 import 'package:event_planning_app/core/firebasehulpers/auth/firebase_auth_methods.dart';
 import 'package:event_planning_app/utiles/provider_extintion.dart';
@@ -12,9 +11,7 @@ import '../../../core/providers/app_local_provider.dart';
 import '../../../core/providers/app_provider.dart';
 import '../../../core/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../bottum_navigation/button_navigation_bar.dart';
-
 import '../rigester/sinup_screan.dart';
 
 class LoginScrean extends StatefulWidget {
@@ -28,19 +25,21 @@ class LoginScrean extends StatefulWidget {
 
 class _LoginScreanState extends State<LoginScrean> {
   late ThemeProvider themeProvider;
-
   late AppLocalizations appLocalizations;
   late AppProvider appProvider;
-
   late AppLocaleProvider appLocaleProvider;
 
   TextEditingController controllerEmail = TextEditingController();
-
   TextEditingController controllerPassword = TextEditingController();
-
   var formKey = GlobalKey<FormState>();
-
   bool obscureText = true;
+
+  @override
+  void dispose() {
+    controllerEmail.dispose();
+    controllerPassword.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,8 @@ class _LoginScreanState extends State<LoginScrean> {
     themeProvider = Provider.of<ThemeProvider>(context);
     appLocaleProvider = Provider.of<AppLocaleProvider>(context);
     appLocalizations = AppLocalizations.of(context)!;
-    void _toggleVisibility() {
+
+    void toggleVisibility() {
       setState(() {
         obscureText = !obscureText;
       });
@@ -66,24 +66,24 @@ class _LoginScreanState extends State<LoginScrean> {
                 child: Column(
                   children: [
                     Center(
-                        child: Image.asset(
-                      ImageAssets.verticalLogo,
-                      width: MediaQuery.of(context).size.width * 0.3,
-                    )),
-                    const SizedBox(
-                      height: 24,
+                      child: Image.asset(
+                        ImageAssets.verticalLogo,
+                        width: MediaQuery.of(context).size.width * 0.3,
+                      ),
                     ),
+                    const SizedBox(height: 24),
                     TextFormField(
                       controller: controllerEmail,
                       decoration: InputDecoration(
-                          hintText: appLocalizations.email,
-                          prefixIcon: const Icon(Icons.email)),
+                        hintText: appLocalizations.email,
+                        prefixIcon: const Icon(Icons.email),
+                      ),
                       validator: (email) {
-                        if (email!.isEmpty || email == null) {
+                        if (email == null || email.isEmpty) {
                           return 'email is required';
                         }
                         final bool emailValid = RegExp(
-                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            r"^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                             .hasMatch(email);
                         if (!emailValid) {
                           return 'email is not valid';
@@ -91,22 +91,22 @@ class _LoginScreanState extends State<LoginScrean> {
                         return null;
                       },
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
                     TextFormField(
                       obscureText: obscureText,
                       controller: controllerPassword,
                       decoration: InputDecoration(
-                          hintText: appLocalizations.password,
-                          prefixIcon: const Icon(Icons.lock),
-                          suffixIcon: IconButton(
-                              onPressed: _toggleVisibility,
-                              icon: obscureText
-                                  ? const Icon(Icons.visibility_off)
-                                  : const Icon(Icons.visibility))),
+                        hintText: appLocalizations.password,
+                        prefixIcon: const Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          onPressed: toggleVisibility,
+                          icon: obscureText
+                              ? const Icon(Icons.visibility_off)
+                              : const Icon(Icons.visibility),
+                        ),
+                      ),
                       validator: (password) {
-                        if (password!.isEmpty || password == null) {
+                        if (password == null || password.isEmpty) {
                           return 'password is required';
                         }
                         if (password.length < 6) {
@@ -115,33 +115,27 @@ class _LoginScreanState extends State<LoginScrean> {
                         return null;
                       },
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
-                            onPressed: () {},
-                            child: Text(appLocalizations.forgetPassword)),
+                          onPressed: () {},
+                          child: Text(appLocalizations.forgetPassword),
+                        ),
                       ],
                     ),
                     SizedBox(
-                        width: double.infinity,
-                        height: 60,
-                        child: LoginButtom(context)),
-                    const SizedBox(
-                      height: 24,
+                      width: double.infinity,
+                      height: 60,
+                      child: LoginButton(context),
                     ),
+                    const SizedBox(height: 24),
                     signUpRow(context),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                    const SizedBox(height: 24),
                     buildOrText(context),
-                    googleIogin(context),
-                    const SizedBox(
-                      height: 24,
-                    ),
+                    googleLogin(context),
+                    const SizedBox(height: 24),
                     AnimatedToggleSwitch.rolling(
                       style: const ToggleStyle(
                         backgroundColor: Colors.transparent,
@@ -154,15 +148,13 @@ class _LoginScreanState extends State<LoginScrean> {
                       current: appLocaleProvider.AppLocal,
                       values: ['ar', 'en'],
                       iconBuilder: (value, foreground) {
-                        if (value == 'en') {
-                          return const CircleAvatar(
-                            backgroundImage: AssetImage(ImageAssets.english),
-                          );
-                        } else {
-                          return const CircleAvatar(
-                            backgroundImage: AssetImage(ImageAssets.arabic),
-                          );
-                        }
+                        return CircleAvatar(
+                          backgroundImage: AssetImage(
+                            value == 'en'
+                                ? ImageAssets.english
+                                : ImageAssets.arabic,
+                          ),
+                        );
                       },
                     )
                   ],
@@ -175,36 +167,78 @@ class _LoginScreanState extends State<LoginScrean> {
     );
   }
 
-  FilledButton LoginButtom(BuildContext context) {
+  FilledButton LoginButton(BuildContext context) {
     return FilledButton(
-        onPressed: () async {
-          if (!formKey.currentState!.validate()) return;
-          try {
-            //todo:show loading
-            showLoading(context);
-            final credential =
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
-              email: controllerEmail.text,
-              password: controllerPassword.text,
-            );
-            appProvider
-                .updateUser(await getUserfromFirestore(credential.user!.uid));
-            //todo:hide loading
-            hideLoading(context);
-            //todo:navigate to home // why? because if there is an error it will not get to here if not and sucsses it navigate
-            Navigator.pushNamed(context, ButtonNavigationBar.routeName);
-          } on FirebaseAuthException catch (e) {
-            //todo:hide loading
-            hideLoading(context);
-            //todo:show error massege
+      onPressed: () async {
+        if (!formKey.currentState!.validate()) return;
 
-            showMassege('${e.code}', context,
-                title: 'error',
-                postiveButtonTitle: 'ok',
-                postiveButtonClick: () {});
+        showLoading(context);
+
+        try {
+          final credential = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(
+            email: controllerEmail.text.trim(),
+            password: controllerPassword.text.trim(),
+          );
+
+          final userData = await getUserfromFirestore(credential.user!.uid);
+          appProvider.updateUser(userData);
+
+          // Hide loading before navigation
+          if (mounted) {
+            hideLoading(context);
+
+            // Navigate to home screen
+            Navigator.pushReplacementNamed(context, ButtonNavigationBar.routeName);
           }
-        },
-        child: Text(appLocalizations.login));
+        } on FirebaseAuthException catch (e) {
+          if (mounted) {
+            hideLoading(context);
+
+            // Show error message
+            showMassege(
+              _getErrorMessage(e.code),
+              context,
+              title: 'Login Error',
+              postiveButtonTitle: 'OK',
+              postiveButtonClick: () {},
+            );
+          }
+        } catch (e) {
+          if (mounted) {
+            hideLoading(context);
+
+            showMassege(
+              'An unexpected error occurred. Please try again.',
+              context,
+              title: 'Error',
+              postiveButtonTitle: 'OK',
+              postiveButtonClick: () {},
+            );
+          }
+        }
+      },
+      child: Text(appLocalizations.login),
+    );
+  }
+
+  String _getErrorMessage(String errorCode) {
+    switch (errorCode) {
+      case 'user-not-found':
+        return 'No user found with this email address.';
+      case 'wrong-password':
+        return 'Invalid password. Please try again.';
+      case 'invalid-email':
+        return 'Please enter a valid email address.';
+      case 'user-disabled':
+        return 'This account has been disabled.';
+      case 'too-many-requests':
+        return 'Too many login attempts. Please try again later.';
+      case 'network-request-failed':
+        return 'Network error. Please check your connection.';
+      default:
+        return 'Login failed. Please try again.';
+    }
   }
 
   Row signUpRow(BuildContext context) {
@@ -216,10 +250,11 @@ class _LoginScreanState extends State<LoginScrean> {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, SinupScrean.routName);
-            },
-            child: Text(appLocalizations.create_email)),
+          onPressed: () {
+            Navigator.pushNamed(context, SinupScrean.routName);
+          },
+          child: Text(appLocalizations.create_email),
+        ),
       ],
     );
   }
@@ -228,9 +263,8 @@ class _LoginScreanState extends State<LoginScrean> {
     return Row(
       children: [
         const Expanded(
-            child: Divider(
-          color: AppColors.primaryPurple,
-        )),
+          child: Divider(color: AppColors.primaryPurple),
+        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
@@ -239,15 +273,13 @@ class _LoginScreanState extends State<LoginScrean> {
           ),
         ),
         const Expanded(
-          child: Divider(
-            color: AppColors.primaryPurple,
-          ),
+          child: Divider(color: AppColors.primaryPurple),
         ),
       ],
     );
   }
 
-  SizedBox googleIogin(BuildContext context) {
+  SizedBox googleLogin(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: 60,
@@ -256,18 +288,18 @@ class _LoginScreanState extends State<LoginScrean> {
           side: const BorderSide(color: AppColors.primaryPurple),
           backgroundColor: AppColors.bgwhite,
         ),
-        onPressed: () {},
+        onPressed: () {
+          // Google login logic (optional)
+        },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(ImageAssets.google),
-            const SizedBox(
-              width: 10,
-            ),
+            const SizedBox(width: 10),
             Text(
               appLocalizations.login_with_google,
               style: Theme.of(context).textTheme.labelSmall,
-            )
+            ),
           ],
         ),
       ),

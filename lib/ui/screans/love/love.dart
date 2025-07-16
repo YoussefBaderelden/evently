@@ -78,7 +78,7 @@ class _LoveState extends State<Love> {
                 padding: const EdgeInsets.all(16),
                 child: Container(
                   width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.25,
+                  height: MediaQuery.of(context).size.height * 0.27,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
                     color: themeProvider.isDark()
@@ -110,7 +110,7 @@ class _LoveState extends State<Love> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.07,
+                    height: MediaQuery.of(context).size.height * 0.08,
                     width: MediaQuery.of(context).size.width * 0.13,
                     margin: const EdgeInsets.all(26),
                     decoration: BoxDecoration(

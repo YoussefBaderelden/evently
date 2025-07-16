@@ -70,7 +70,7 @@ class _ProfileState extends State<Profile> {
                   height: MediaQuery.of(context).size.height * 0.01,
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.28,
+                  height: MediaQuery.of(context).size.height * 0.27,
                 ),
                 buildLogoutButton(context)
               ],
@@ -271,7 +271,7 @@ class _ProfileState extends State<Profile> {
                 appProvider.curentUser!.email,
                 style:const TextStyle(
                     fontWeight: FontWeight.w400,
-                    fontSize: 22,
+                    fontSize: 20,
                     color: AppColors.bgwhite),
               )
             ],

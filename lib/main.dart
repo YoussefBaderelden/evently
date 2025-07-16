@@ -74,8 +74,9 @@ class MyApp extends StatelessWidget {
         HomeScrean.routeName: (_) => HomeScrean(),
         ButtonNavigationBar.routeName: (_) => const ButtonNavigationBar(),
         CreateEventScrean.routeName: (_) => CreateEventScrean(),
+        AuthWrapper.routeName: (_) => const AuthWrapper(),
       },
-      home: const AuthWrapper(),
+      initialRoute: SplashScrean.routeName,
     );
   }
 }

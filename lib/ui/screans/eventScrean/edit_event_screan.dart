@@ -13,6 +13,7 @@ import '../../../core/providers/app_provider.dart';
 import '../../../core/providers/event_map_screan_provider.dart';
 import '../../../core/providers/theme_provider.dart';
 import '../../../core/themes/app_colors.dart';
+import '../bottum_navigation/button_navigation_bar.dart';
 import '../home/home_screan.dart';
 import '../shared_wedgit/TabBarWidget.dart';
 import '../shared_wedgit/app_bar_view.dart';
@@ -174,7 +175,7 @@ class _EditEventScreanState extends State<EditEventScrean>
           showLoading(context);
           await updateEvent(event);
           hideLoading(context);
-          Navigator.pushNamed(context, HomeScrean.routeName);
+          Navigator.pushNamed(context, ButtonNavigationBar.routeName);
         },
         child: Text(appLocalizations.update_event),
       ),

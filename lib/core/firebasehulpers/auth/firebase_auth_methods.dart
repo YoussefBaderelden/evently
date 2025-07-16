@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-showLoading(BuildContext context) {
+void showLoading(BuildContext context) {
   showDialog(
-    barrierDismissible: false,
     context: context,
+    barrierDismissible: false,
     builder: (context) {
-      return CupertinoAlertDialog(
+      return const CupertinoAlertDialog(
         content: Row(
           children: [
-            Text("Loading"),
+            Text("Loading..."),
             Spacer(),
             CircularProgressIndicator(),
           ],
@@ -19,54 +19,49 @@ showLoading(BuildContext context) {
   );
 }
 
-hideLoading(BuildContext context) {
-  Navigator.pop(context);
+void hideLoading(BuildContext context) {
+  try {
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+  } catch (e) {
+    debugPrint('hideLoading error: $e');
+  }
 }
 
-showMassege(String massege, BuildContext context,
-    {String? title,
-    String? negativeButtonTitle,
-    String? postiveButtonTitle,
-    Function? postiveButtonClick,
-    Function? negativeButtonClick}) {
+void showMassege(
+    String massege,
+    BuildContext context, {
+      String? title,
+      String? negativeButtonTitle,
+      String? postiveButtonTitle,
+      Function? postiveButtonClick,
+      Function? negativeButtonClick,
+    }) {
   showDialog(
     context: context,
     builder: (context) {
-      return CupertinoAlertDialog(
-        title: title == null ? null : Text(title),
-        content: Column(
-          children: [
-            Text("$massege"),
-            SizedBox(
-              width: 20,
+      return AlertDialog(
+        title: title != null ? Text(title) : null,
+        content: Text(massege),
+        actions: [
+          if (postiveButtonTitle != null)
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (postiveButtonClick != null) postiveButtonClick();
+              },
+              child: Text(postiveButtonTitle),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                if (postiveButtonTitle != null)
-                  TextButton(
-                    onPressed: () {
-                      if (postiveButtonClick != null) postiveButtonClick!();
-                      hideLoading(context);
-                    },
-                    child: postiveButtonTitle != null
-                        ? Text('$postiveButtonTitle')
-                        : Container(),
-                  ),
-                if (negativeButtonTitle != null)
-                  TextButton(
-                    onPressed: () {
-                      if (negativeButtonClick != null) negativeButtonClick!();
-                      hideLoading(context);
-                    },
-                    child: negativeButtonTitle != null
-                        ? Text('$negativeButtonTitle')
-                        : Container(),
-                  ),
-              ],
-            )
-          ],
-        ),
+          if (negativeButtonTitle != null)
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                if (negativeButtonClick != null) negativeButtonClick();
+              },
+              child: Text(negativeButtonTitle),
+            ),
+        ],
       );
     },
   );

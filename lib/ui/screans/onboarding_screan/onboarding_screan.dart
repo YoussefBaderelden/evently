@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../core/App_assets/image_assets.dart';
+import '../../../core/SharedPreferences/shared_preferences.dart';
+import '../../../core/firebasehulpers/auth/login_state.dart';
 import '../../../core/providers/theme_provider.dart';
 
 class OnboardingScrean extends StatefulWidget {
@@ -101,10 +103,12 @@ class _OnboardingScreanState extends State<OnboardingScrean>
                     ),
                   ),
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
                       if (currentPageIndex == 2) {
+                        await SharedPrefHelper.setOnboardingSeen(true);
                         Navigator.pushReplacementNamed(
-                            context, LoginScrean.routName);
+                            context,AuthWrapper.routeName);
+
                       } else {
                         pageController.nextPage(
                           duration: const Duration(milliseconds: 500),
@@ -149,15 +153,15 @@ class _OnboardingScreanState extends State<OnboardingScrean>
           Center(
             child: Image.asset(
               themeProvider.isDark() ? imagePathDark : imagePathLight,
-              width: MediaQuery.of(context).size.width * 0.7,
+              width: MediaQuery.of(context).size.width * 0.6,
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
           Text(
             title,
             textAlign: TextAlign.start,
             style: const TextStyle(
-              fontSize: 22,
+              fontSize: 18,
               fontWeight: FontWeight.w700,
               color: AppColors.primaryPurple,
             ),
@@ -168,7 +172,7 @@ class _OnboardingScreanState extends State<OnboardingScrean>
             textAlign: TextAlign.start,
             style: TextStyle(
               color: themeProvider.isDark() ? Colors.white : Colors.black,
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),

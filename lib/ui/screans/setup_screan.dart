@@ -5,6 +5,9 @@ import 'package:event_planning_app/core/themes/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../core/SharedPreferences/cashing_setup.dart';
+import '../../core/SharedPreferences/shared_preferences.dart';
+import '../../core/firebasehulpers/auth/login_state.dart';
 import '../../core/providers/app_local_provider.dart';
 import 'onboarding_screan/onboarding_screan.dart';
 
@@ -69,7 +72,7 @@ class SetupScrean extends StatelessWidget {
                         appLocaleProvider.AppLocal = value;
                       },
                       current: appLocaleProvider.AppLocal,
-                      values:const ['ar', 'en'],
+                      values: const ['ar', 'en'],
                       iconBuilder: (value, foreground) {
                         if (value == 'en') {
                           return const CircleAvatar(
@@ -130,9 +133,17 @@ class SetupScrean extends StatelessWidget {
                   height: 60,
                   width: double.infinity,
                   child: FilledButton(
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(
-                            context, OnboardingScrean.routeName);
+                      onPressed: () async {
+                        await CashingSetup.setHasSeenSetup(true);
+                        final hasSeenOnboarding =
+                            await SharedPrefHelper.hasSeenOnboarding();
+                        if (!hasSeenOnboarding) {
+                          Navigator.pushReplacementNamed(
+                              context, OnboardingScrean.routeName);
+                        } else {
+                          Navigator.pushReplacementNamed(
+                              context, AuthWrapper.routeName);
+                        }
                       },
                       child: Text(appLocalizations.setupClick)),
                 ),

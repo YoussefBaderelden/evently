@@ -8,6 +8,7 @@ import '../../providers/app_provider.dart';
 import '../store/firestore_hulpers.dart';
 
 class AuthWrapper extends StatefulWidget {
+  static const routeName = '/auth-wrapper';
   const AuthWrapper({super.key});
 
   @override
@@ -37,12 +38,17 @@ class _AuthWrapperState extends State<AuthWrapper> {
               }
 
               if (userSnapshot.hasData) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Provider.of<AppProvider>(context, listen: false)
-                      .updateUser(userSnapshot.data!);
+                final userDM = userSnapshot.data!;
+
+                Future.microtask(() {
+                  final appProvider =
+                  Provider.of<AppProvider>(context, listen: false);
+                  appProvider.updateUser(userDM);
+                  Navigator.pushReplacementNamed(
+                      context, ButtonNavigationBar.routeName);
                 });
 
-                return const ButtonNavigationBar();
+                return const Scaffold(body: SizedBox());
               }
 
               return LoginScrean(); // fallback
@@ -55,3 +61,5 @@ class _AuthWrapperState extends State<AuthWrapper> {
     );
   }
 }
+
+

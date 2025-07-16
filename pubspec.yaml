@@ -48,6 +48,7 @@ dependencies:
   smooth_page_indicator: ^1.2.1
   location: ^8.0.1
   google_maps_flutter: ^2.12.3
+  shared_preferences: ^2.5.3
 
 
 dev_dependencies:
